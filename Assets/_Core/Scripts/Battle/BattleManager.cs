@@ -45,6 +45,8 @@ namespace _Core.Scripts.Battle
             else
                 _enemyEffect.Remove(effect);
             Destroy(effect.gameObject);
+            if (_enemyEffect.Count == 0 & _gameStateDirector.GetCurrentGameState() == GameState.EnemyStep)
+                _gameStateDirector.SetGameState(GameState.PlayerStep);
         }
 
         private void Start()
@@ -131,6 +133,7 @@ namespace _Core.Scripts.Battle
                     DestroyEffects(_playerEffect);
                     break;
                 case GameState.WinGame:
+                    DestroyEffects(_playerEffect);
                     break;
             }
         }

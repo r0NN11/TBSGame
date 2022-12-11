@@ -38,8 +38,7 @@ namespace _Core.Scripts.Battle
                     {
                         ApplyEffect(effect);
                     }
-                })
-                .OnComplete(() => { _gameStateDirector.SetGameState(GameState.PlayerStep); });
+                });
         }
 
         private void ApplyEffect(Effect effect)
