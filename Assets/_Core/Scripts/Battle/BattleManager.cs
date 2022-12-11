@@ -22,7 +22,11 @@ namespace _Core.Scripts.Battle
         private List<Unit> _listPlayer;
         private List<Unit> _listEnemy;
 
-        private Effect _unitCurrentEffectObj;
+        private Effect _attackPrefab;
+        private Effect _healPrefab;
+        private Effect _poisonPrefab;
+        private Effect _defencePrefab;
+
         private float _zPos = 1;
 
         [Inject]
@@ -59,33 +63,23 @@ namespace _Core.Scripts.Battle
         {
             for (var i = 0; i < unitList.Count; i++)
             {
-                var randomEffect =
-                    (Effects.Effects) Random.Range(0, Enum.GetValues(typeof(Effects.Effects)).Length);
+                var randomEffect = (Effects.Effects) Random.Range(0, Enum.GetValues(typeof(Effects.Effects)).Length);
                 switch (randomEffect)
                 {
                     case Effects.Effects.EffectAttack:
-                        _unitCurrentEffectObj = Instantiate(
-                            _defaultEffectSettings.GetAttackSettings().GetAttackPrefab(),
-                            transform.position, transform.rotation);
+                        unitEffect.Add(Instantiate(_attackPrefab, transform.position, transform.rotation));
                         break;
                     case Effects.Effects.EffectHeal:
-                        _unitCurrentEffectObj = Instantiate(
-                            _defaultEffectSettings.GetHealSettings().GetHealPrefab(),
-                            transform.position, transform.rotation);
+                        unitEffect.Add(Instantiate(_healPrefab, transform.position, transform.rotation));
                         break;
                     case Effects.Effects.EffectPoison:
-                        _unitCurrentEffectObj = Instantiate(
-                            _defaultEffectSettings.GetPoisonSettings().GetPoisonPrefab(),
-                            transform.position, transform.rotation);
+                        unitEffect.Add(Instantiate(_poisonPrefab, transform.position, transform.rotation));
                         break;
                     case Effects.Effects.EffectDefence:
-                        _unitCurrentEffectObj = Instantiate(
-                            _defaultEffectSettings.GetDefenceSettings().GetDefencePrefab(),
-                            transform.position, transform.rotation);
+                        unitEffect.Add(Instantiate(_defencePrefab, transform.position, transform.rotation));
                         break;
                 }
 
-                unitEffect.Add(_unitCurrentEffectObj);
                 SetUpEffectPosition(unitEffect[i], unitList[i].transform, zPos);
                 unitEffect[i].SetSelfUnit(unitList[i].gameObject);
                 unitEffect[i].SetTypeEffect(typeEffect);
@@ -120,6 +114,10 @@ namespace _Core.Scripts.Battle
                     _listEnemy = _enemyController.GetEnemiesList();
                     _playerEffect = new List<Effect>();
                     _enemyEffect = new List<Effect>();
+                    _attackPrefab = _defaultEffectSettings.GetAttackSettings().GetAttackPrefab();
+                    _healPrefab = _defaultEffectSettings.GetPoisonSettings().GetPoisonPrefab();
+                    _poisonPrefab = _defaultEffectSettings.GetPoisonSettings().GetPoisonPrefab();
+                    _defencePrefab = _defaultEffectSettings.GetDefenceSettings().GetDefencePrefab();
                     CreateUnitEffect(_listPlayer, TypeEffect.Player, _playerEffect, _zPos);
                     break;
                 case GameState.PlayerStep:
